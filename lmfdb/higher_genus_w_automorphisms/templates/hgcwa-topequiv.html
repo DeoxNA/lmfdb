@@ -1,0 +1,80 @@
+{% extends "homepage.html" %}
+
+{% block content %}
+
+
+<style>
+table,td {
+  border-right:solid 30px transparent;
+} 
+</style>
+
+
+
+<p><h2> Family Information</h2>
+
+  <table>
+      <tr><td> Genus:  </td><td> {{ info.g }} </td></tr>
+      <tr><td>{{KNOWL('curve.highergenus.aut.dimension',title='Dimension of the family')}}:</td><td> {{info.dim}} </td></tr>
+    </table>
+</p>
+
+
+<p> <h2>Group </h2>
+  <table>
+   {% if info.specialname %}
+   <tr><td>Isomorphism class:</td> <td>${{info.group}}$</td></tr>
+   {% endif %}
+     <tr><td>{{KNOWL('curve.highergenus.aut.groupnotation',title='GAP/Magma notation')}}:</td><td>SmallGroup{{info.gpid}}</td></tr>
+    </table>
+</p>
+
+
+
+<p><h2>Cover</h2><table>
+      <tr><td> Quotient genus: </td> <td>{{info.g0}}</td></tr>
+      <tr><td> Number of {{ KNOWL('curve.highergenus.aut.branchpoints', title='branch points') }}: </td> <td>{{info.r}}</td></tr>
+      <tr><td> {{ KNOWL('curve.highergenus.aut.signature', title='Signature')}}:</td> <td>${{info.sign}}$</td></tr></table>
+  </p>
+
+
+<h2> {{KNOWL('curve.highergenus.aut.topological_equivalence',title='Topologically Inequivalent Actions')}}</h2>
+
+There are {{info.numb}} topologically inequivalent actions. 
+
+<ol>{% for field in info.fields: %}
+     <li> {{ KNOWL('curve.highergenus.aut.generating_vectors', title='Generating vector')}} in ${{info.group}}$:
+      <table>     
+      <tbody>
+      {% for gen in field.gen_vectors: %}
+       <tr> <td> </td><td>{{gen}}</td></tr>
+       {% endfor %}
+       </td></tr>
+      </table>
+      <table>     
+      <tbody>
+      {% if field.hyperelliptic %}
+        <tr><td>Hyperelliptic curve(s):</td><td>{{info.tfTOyn(field.hyperelliptic)}}</td></tr>
+         {% if field.hyp_involution  %}
+           <tr><td>{{ KNOWL('curve.highergenus.hyperelliptic.involution', title='Hyperelliptic involution')}}:</td> <td>{{field.hyp_involution}}</td></tr>
+         {% endif %}
+      {% endif %} 
+      {% if field.eqn  %}
+         <tr> <td>Model of curve(s) in the family:</td><td>${{field.eqn}}$</td></tr>
+      {% endif %}
+       </table> 
+
+    {% if field.full_auto  %}
+The full automorphism group for this family is ${{info.groupid_to_meaningful(field.full_auto)}}$ with signature ${{info.sign_display(field.signH)}}$.
+{% endif %}
+</li><br>
+{% endfor %}
+</ol> 
+
+
+
+
+
+{% endblock %}
+
+
